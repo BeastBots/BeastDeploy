@@ -33,6 +33,9 @@ on:
       UPSTREAM_REPO:
         description: "Upstream Repo of your Fork or Main Repo"
         required: true
+      UPSTREAM_BRANCH:
+        description: "Upstream Branch of your Fork or Main Repo"
+        required: true
       
 jobs:
   deploy:
@@ -69,3 +72,4 @@ jobs:
           HD_DATABASE_URL: ${{inputs.DATABASE_URL}}
           HD_BOT_TOKEN: ${{inputs.BOT_TOKEN}}
           HD_UPSTREAM_REPO: ${{inputs.UPSTREAM_REPO}}
+          HD_UPSTREAM_BRANCH: ${{inputs.UPSTREAM_BRANCH}}
