@@ -1,5 +1,5 @@
 from sys import exit
-from importlib import import_module
+from os import path, remove, environ
 from logging import (
     FileHandler,
     StreamHandler,
@@ -10,14 +10,31 @@ from logging import (
     getLogger,
     ERROR,
 )
-from os import path, remove, environ
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from subprocess import run as srun, call as scall
+from dotenv import dotenv_values
 
 getLogger("pymongo").setLevel(ERROR)
 
-var_list = ['BOT_TOKEN', 'TELEGRAM_API', 'TELEGRAM_HASH', 'OWNER_ID', 'DATABASE_URL', 'BASE_URL', 'UPSTREAM_REPO', 'UPSTREAM_BRANCH']
+var_list = [
+    "BOT_TOKEN",
+    "TELEGRAM_API",
+    "TELEGRAM_HASH",
+    "OWNER_ID",
+    "DATABASE_URL",
+    "BASE_URL",
+    "UPSTREAM_REPO",
+    "UPSTREAM_BRANCH",
+    "UPDATE_PKGS",
+]
+
+if path.exists("log.txt"):
+    with open("log.txt", "r+") as f:
+        f.truncate(0)
+
+if path.exists("rlog.txt"):
+    remove("rlog.txt")
 
 basicConfig(
     format="[%(asctime)s] [%(levelname)s] - %(message)s",
@@ -25,20 +42,24 @@ basicConfig(
     handlers=[FileHandler("log.txt"), StreamHandler()],
     level=INFO,
 )
+
+# Load from config.env
 try:
-    settings = import_module("config")
-    config_file = {
-        key: value.strip() if isinstance(value, str) else value
-        for key, value in vars(settings).items()
-        if not key.startswith("__")
-    }
-except ModuleNotFoundError:
-    log_info("Config.py file is not Added! Checking ENVs..")
+    env_config = dotenv_values("config.env")
+    config_file = {key: value.strip() if isinstance(value, str) else value for key, value in env_config.items()}
+    log_info("Loaded configuration from config.env")
+except Exception as e:
+    log_error(f"Error reading config.env: {e}")
     config_file = {}
 
-env_updates = {key: value.strip() if isinstance(value, str) else value for key, value in environ.items() if key in var_list}
+# Override with environment variables
+env_updates = {
+    key: value.strip() if isinstance(value, str) else value
+    for key, value in environ.items()
+    if key in var_list
+}
 if env_updates:
-    log_info("Config data is updated with ENVs!")
+    log_info("Environment variable overrides detected. Updating config...")
     config_file.update(env_updates)
 
 BOT_TOKEN = config_file.get("BOT_TOKEN", "")
@@ -51,7 +72,7 @@ BOT_ID = BOT_TOKEN.split(":", 1)[0]
 if DATABASE_URL := config_file.get("DATABASE_URL", "").strip():
     try:
         conn = MongoClient(DATABASE_URL, server_api=ServerApi("1"))
-        db = conn.wzmlx
+        db = conn.beast
         old_config = db.settings.deployConfig.find_one({"_id": BOT_ID}, {"_id": 0})
         config_dict = db.settings.config.find_one({"_id": BOT_ID})
         if (
@@ -73,14 +94,14 @@ if UPSTREAM_REPO:
 
     update = srun(
         [
-            f"git init -q \
-                     && git config --global user.email 105407900+SilentDemonSD@users.noreply.github.com \
-                     && git config --global user.name SilentDemonSD \
-                     && git add . \
-                     && git commit -sm update -q \
-                     && git remote add origin {UPSTREAM_REPO} \
-                     && git fetch origin -q \
-                     && git reset --hard origin/{UPSTREAM_BRANCH} -q"
+            f"git init -q && "
+            f"git config --global user.email 131198906+ThePrateekBhatia@users.noreply.github.com && "
+            f"git config --global user.name Prateek Bhatia && "
+            f"git add . && "
+            f"git commit -sm update -q && "
+            f"git remote add origin {UPSTREAM_REPO} && "
+            f"git fetch origin -q && "
+            f"git reset --hard origin/{UPSTREAM_BRANCH} -q"
         ],
         shell=True,
     )
@@ -92,7 +113,6 @@ if UPSTREAM_REPO:
     else:
         log_error("Something went Wrong ! Recheck your details or Ask Support !")
     log_info(f"UPSTREAM_REPO: {UPSTREAM_REPO} | UPSTREAM_BRANCH: {UPSTREAM_BRANCH}")
-
 
 UPDATE_PKGS = config_file.get("UPDATE_PKGS", "True")
 if (isinstance(UPDATE_PKGS, str) and UPDATE_PKGS.lower() == "true") or UPDATE_PKGS:
