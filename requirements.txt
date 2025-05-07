@@ -5,6 +5,7 @@ anytree
 apscheduler
 aria2p
 asyncio
+beautifulsoup4
 cloudscraper
 dnspython
 feedparser
