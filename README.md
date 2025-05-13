@@ -1,28 +1,13 @@
 <div align="center">
 <!-- <img src="https://i0.wp.com/gluonhq.com/wp-content/uploads/2018/05/heroku-logotype-vertical-purple.png" alt="Heorku Image" align="right" width="150">-->
 
-# ⚕️ ***HEROKU DEPLOY GUIDE***
+# ***HEROKU DEPLOY GUIDE***
 
 </div>
 
 ---
 
-### 1️⃣ ***METHOD 1: (Google Collab Guide)***
-
-<details>
-  <summary><b>Expand All Steps to Deploy <sup><kbd>Click Here</kbd></sup></b></summary>
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/SilentDemonSD/WZ-Deploy/blob/main/wzv3_hk_deploy.ipynb)
-
-**Step 1 :** 
-
-
-
-</details>
-
----
-
-### 2️⃣ ***METHOD 2: (Github Workflow Guide)***
+### 1️⃣ ***METHOD 1: (Github Workflow Guide)***
 
 <details>
   <summary><b>Expand All Steps to Deploy <sup><kbd>Click Here</kbd></sup></b></summary>
@@ -72,7 +57,7 @@
 
 ---
 
-### 3️⃣ ***METHOD 3: (Heroku CLI Guide)***
+### 2️⃣ ***METHOD 2: (Heroku CLI Guide)***
 
 <details>
   <summary><b>Expand All Steps to Deploy <sup><kbd>Click Here</kbd></sup></b></summary>
@@ -81,7 +66,7 @@
 > Make sure git is Installed in your system or quick run `apt-get install git pip curl -y`
 
 ```shell
-git clone https://github.com/SilentDemonSD/WZ-Deploy wzbot && cd wzbot
+git clone https://github.com/BeastBots/BeastDeploy deploy && cd deploy
 ```
 
 **Step 2 :** Now Install Heroku in your Sytem or checkout Official Heroku Deploy Docs, or Download via `apt-get` or `npm`
@@ -124,7 +109,7 @@ heroku login -i
 **Step 4 :** Create Heroku App and specify stack and region with App Name
 
 ```shell
-heroku create --region us --stack container APP_NAME
+heroku create --region eu --stack container APP_NAME
 ```
 
 **To Be Noted**: Copy the `BASE_URL` after the App is Created and Put the Value in `BASE_URL` when editing `config.py`
@@ -150,7 +135,7 @@ nano config.py
   TELEGRAM_HASH = ""
   OWNER_ID = 0
   UPSTREAM_REPO = ""
-  UPSTREAM_BRANCH = "wzv3"
+  UPSTREAM_BRANCH = "master"
   DATABASE_URL = ""
   BASE_URL = ""
   ```
@@ -213,6 +198,10 @@ heroku logs -a APP_NAME -t
 
 ### ⚠️ ***Branch Specifications:***
 
-- All files to be Uploaded in this `main` Branch and set Upstream as `wzv3` Branch of actual repo.
+- All files to be Uploaded in this `main` Branch and set Upstream as `master` Branch of actual repo.
 
 ---
+
+### ❤️ ***Credits:***
+- [Beast Bots](https://github.com/BeastBots)
+- [Silent Demon SD ( MysterySD )](https://github.com/SilentDemonSD)

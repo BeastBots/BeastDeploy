@@ -17,7 +17,24 @@ from subprocess import run as srun, call as scall
 
 getLogger("pymongo").setLevel(ERROR)
 
-var_list = ['BOT_TOKEN', 'TELEGRAM_API', 'TELEGRAM_HASH', 'OWNER_ID', 'DATABASE_URL', 'BASE_URL', 'UPSTREAM_REPO', 'UPSTREAM_BRANCH']
+var_list = [
+    "BOT_TOKEN",
+    "TELEGRAM_API",
+    "TELEGRAM_HASH",
+    "OWNER_ID",
+    "DATABASE_URL",
+    "BASE_URL",
+    "UPSTREAM_REPO",
+    "UPSTREAM_BRANCH",
+    "UPDATE_PKGS",
+]
+
+if path.exists("log.txt"):
+    with open("log.txt", "r+") as f:
+        f.truncate(0)
+
+if path.exists("rlog.txt"):
+    remove("rlog.txt")
 
 basicConfig(
     format="[%(asctime)s] [%(levelname)s] - %(message)s",
@@ -36,7 +53,11 @@ except ModuleNotFoundError:
     log_info("Config.py file is not Added! Checking ENVs..")
     config_file = {}
 
-env_updates = {key: value.strip() if isinstance(value, str) else value for key, value in environ.items() if key in var_list}
+env_updates = {
+    key: value.strip() if isinstance(value, str) else value
+    for key, value in environ.items()
+    if key in var_list
+}
 if env_updates:
     log_info("Config data is updated with ENVs!")
     config_file.update(env_updates)
@@ -51,7 +72,7 @@ BOT_ID = BOT_TOKEN.split(":", 1)[0]
 if DATABASE_URL := config_file.get("DATABASE_URL", "").strip():
     try:
         conn = MongoClient(DATABASE_URL, server_api=ServerApi("1"))
-        db = conn.wzmlx
+        db = conn.beast
         old_config = db.settings.deployConfig.find_one({"_id": BOT_ID}, {"_id": 0})
         config_dict = db.settings.config.find_one({"_id": BOT_ID})
         if (
@@ -65,7 +86,7 @@ if DATABASE_URL := config_file.get("DATABASE_URL", "").strip():
         log_error(f"Database ERROR: {e}")
 
 UPSTREAM_REPO = config_file.get("UPSTREAM_REPO", "").strip()
-UPSTREAM_BRANCH = config_file.get("UPSTREAM_BRANCH", "").strip() or "wzv3"
+UPSTREAM_BRANCH = config_file.get("UPSTREAM_BRANCH", "").strip() or "master"
 
 if UPSTREAM_REPO:
     if path.exists(".git"):
@@ -74,8 +95,8 @@ if UPSTREAM_REPO:
     update = srun(
         [
             f"git init -q \
-                     && git config --global user.email 105407900+SilentDemonSD@users.noreply.github.com \
-                     && git config --global user.name SilentDemonSD \
+                     && git config --global user.email 131198906+ThePrateekBhatia@users.noreply.github.com \
+                     && git config --global user.name Prateek Bhatia \
                      && git add . \
                      && git commit -sm update -q \
                      && git remote add origin {UPSTREAM_REPO} \
