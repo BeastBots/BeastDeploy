@@ -159,7 +159,7 @@ heroku git:remote -a APP_NAME
 **Step 7 :** Now push to Heroku via git forcefully to build.
 
 ```shell
-git push heroku main -f
+git push heroku master -f
 ```
 
 **Heroku Logs:** When checking Logs, Use this will give Complete Logs.
